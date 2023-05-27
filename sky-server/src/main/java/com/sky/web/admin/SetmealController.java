@@ -38,7 +38,7 @@ public class SetmealController {
         SetmealVO setmealVO = setmealService.getById(id);
         return Result.success(setmealVO);
     }
-
+//
 //    //修改菜品
 //    @PutMapping
 //    public Result updateSetmeal(@RequestBody SetmealDTO setmealDTO){

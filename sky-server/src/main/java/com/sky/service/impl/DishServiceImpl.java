@@ -171,15 +171,18 @@ public class DishServiceImpl<DishFlavorMapper> implements DishService {
     @Transactional
     @Override
     public void changeDishStatus(Integer status, Long id) {
-        Long setmealId =setmealDishMapper.findSetmealIdByDishId(id);
+       ArrayList<Long> setmealIds =setmealDishMapper.findSetmealIdByDishId(id);
 
-        ArrayList<Setmeal> setmealList =setmealMapper.getById(setmealId);
-        for (Setmeal setmeal : setmealList) {
+        for (Long setmealId : setmealIds) {
+            Setmeal setmeal =setmealMapper.getById(setmealId);
             setmeal.setStatus(Math.abs(setmeal.getStatus()));
+            setmealMapper.updateBySetmeal(setmeal);
         }
 
+
+
         Dish dish = dishMapper.getById(id);
-        dish.setStatus(Math.abs(status - 1));
+        dish.setStatus(Math.abs(dish.getStatus() - 1));
         dishMapper.updateByDishId(dish);
     }
 }

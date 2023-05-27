@@ -7,12 +7,17 @@ import com.github.pagehelper.PageHelper;
 import com.sky.constant.StatusConstant;
 import com.sky.dto.SetmealDTO;
 import com.sky.dto.SetmealPageDTO;
+import com.sky.entity.Dish;
 import com.sky.entity.DishFlavor;
 import com.sky.entity.Setmeal;
+import com.sky.entity.SetmealDish;
 import com.sky.exception.BusinessException;
+import com.sky.mapper.DishMapper;
+import com.sky.mapper.SetmealDishMapper;
 import com.sky.mapper.SetmealMapper;
 import com.sky.result.PageResult;
 import com.sky.service.SetmealService;
+import com.sky.vo.DishVO;
 import com.sky.vo.SetmealVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +36,15 @@ public class SetmealServiceImpl<SetmealFlavorMapper> implements SetmealService {
 
     @Autowired
     private com.sky.mapper.DishFlavorMapper dishFlavorMapper;
+
+
+    @Autowired
+   private SetmealDishMapper setmealDishMapper;
+
+
+    @Autowired
+    private com.sky.mapper.DishMapper dishMapper;
+
 
 //    // 菜品新增
 //    @Transactional
@@ -78,27 +92,34 @@ public class SetmealServiceImpl<SetmealFlavorMapper> implements SetmealService {
         return new PageResult(page.getTotal(), page.getResult());
     }
 
+
+
+    // 回显套餐
     @Override
     public SetmealVO getById(Long id) {
-        return null;
+        // 1.先查套餐
+        Setmeal setmeal = setmealMapper.getById(id);
+        // 2.再根据套餐id查询菜品列表
+        List<SetmealDish> setmealDishes = setmealDishMapper.getSetmealDishBySetmealId(id);
+
+
+//        List<Dish> dishes = null;
+//        for (Long dishId : dishIds) {
+//            dishes.add(dishMapper.getById(dishId));
+//
+//        }
+
+
+        // 3.封装vo
+        SetmealVO setmealVO = BeanUtil.copyProperties(setmeal, SetmealVO.class);
+        setmealVO.setSetmealDishes(setmealDishes);
+     //   setmealVO.dishFlavors(flavorList);
+        // 4.返回vo
+        return setmealVO;
     }
 
-//    // 回显菜品
-//    @Override
-//    public SetmealVO getById(Long id) {
-//        // 1.先查菜品
-//        Setmeal setmeal = setmealMapper.getById(id);
-//        // 2.再根据菜品id查询口味列表
-//        List<DishFlavor> flavorList = diahFlavorMapper.getListBySetmealId(id);
-//        // 3.封装vo
-//        SetmealVO setmealVO = BeanUtil.copyProperties(setmeal, SetmealVO.class);
-//        setmealVO.dishFlavors(flavorList);
-//        // 4.返回vo
-//        return setmealVO;
-//    }
-
 //
-//    //修改菜品
+//    //修改套餐
 //    @Override
 //    public void updateBySetmealId(SetmealDTO setmealDTO) {
 //        Setmeal setmeal = BeanUtil.copyProperties(setmealDTO, Setmeal.class);
@@ -109,9 +130,9 @@ public class SetmealServiceImpl<SetmealFlavorMapper> implements SetmealService {
 ////        ??
 ////        setmeal.setUpdateTime(LocalDateTime.now());
 ////        setmeal.setUpdateUser(ThreadLocalUtil.getCurrentId());
-//        // 6. 取出口味列表
-//        List<SetmealFlavor> flavorList = setmealDTO.getFlavors();
-//        // 7.遍历（非空判断）
+////        // 6. 取出口味列表
+////        List<SetmealFlavor> flavorList = setmealDTO.getFlavors();
+////        // 7.遍历（非空判断）
 //        /*if (flavorList!=null && flavorList.size()>0) {}*/
 //        if (ArrayUtil.isNotEmpty(flavorList)) {
 //            for (SetmealFlavor setmealFlavor : flavorList) {

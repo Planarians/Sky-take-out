@@ -43,6 +43,5 @@ public interface DishMapper {
     void deleteByDishId(Long id);
 
 
-
 }
 

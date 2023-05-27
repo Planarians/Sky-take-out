@@ -39,14 +39,13 @@ public interface SetmealMapper {
 
     // 根据id查询
     @Select("select * from sky_take_out.setmeal where id=#{id}")
-    ArrayList<Setmeal> getById(Long id);
+    Setmeal getById(Long id);
 
 
 
 
-//
-//    @AutoFill("update")
-//    void updateBySetmealId(Setmeal setmeal);
+    @AutoFill("update")
+    void updateBySetmeal(Setmeal setmeal);
 
 
 
