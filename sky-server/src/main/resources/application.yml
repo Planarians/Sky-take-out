@@ -40,4 +40,8 @@ sky:
     bucket-name: ${sky.alioss.bucket-name}
 
 
+mybatis-plus:
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
 

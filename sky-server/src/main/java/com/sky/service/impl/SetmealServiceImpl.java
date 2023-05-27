@@ -14,6 +14,7 @@ import com.sky.entity.SetmealDish;
 import com.sky.exception.BusinessException;
 import com.sky.mapper.DishMapper;
 import com.sky.mapper.SetmealDishMapper;
+import com.sky.mapper.SetmealMPMapper;
 import com.sky.mapper.SetmealMapper;
 import com.sky.result.PageResult;
 import com.sky.service.SetmealService;
@@ -32,6 +33,8 @@ public class SetmealServiceImpl<SetmealFlavorMapper> implements SetmealService {
 
 
     @Autowired
+    private SetmealMPMapper setmealMPMapper;
+    @Autowired
     private SetmealMapper setmealMapper;
 
     @Autowired
@@ -39,7 +42,7 @@ public class SetmealServiceImpl<SetmealFlavorMapper> implements SetmealService {
 
 
     @Autowired
-   private SetmealDishMapper setmealDishMapper;
+    private SetmealDishMapper setmealDishMapper;
 
 
     @Autowired
@@ -93,7 +96,6 @@ public class SetmealServiceImpl<SetmealFlavorMapper> implements SetmealService {
     }
 
 
-
     // 回显套餐
     @Override
     public SetmealVO getById(Long id) {
@@ -113,26 +115,31 @@ public class SetmealServiceImpl<SetmealFlavorMapper> implements SetmealService {
         // 3.封装vo
         SetmealVO setmealVO = BeanUtil.copyProperties(setmeal, SetmealVO.class);
         setmealVO.setSetmealDishes(setmealDishes);
-     //   setmealVO.dishFlavors(flavorList);
+        //   setmealVO.dishFlavors(flavorList);
         // 4.返回vo
         return setmealVO;
     }
 
-//
-//    //修改套餐
-//    @Override
-//    public void updateBySetmealId(SetmealDTO setmealDTO) {
-//        Setmeal setmeal = BeanUtil.copyProperties(setmealDTO, Setmeal.class);
-//
+
+    //修改套餐
+    @Override
+    public void updateBySetmealId(SetmealDTO setmealDTO) {
+        Setmeal setmeal = BeanUtil.copyProperties(setmealDTO, Setmeal.class);
+
+        setmealMPMapper.updateById(setmeal);
+    }
+}
+
+
 //        setmealMapper.updateBySetmealId(setmeal);
 //        Long setmealId = setmeal.getId();
 //        setmealFlavorMapper.deleteBySetmealId(setmealId);
-////        ??
-////        setmeal.setUpdateTime(LocalDateTime.now());
-////        setmeal.setUpdateUser(ThreadLocalUtil.getCurrentId());
-////        // 6. 取出口味列表
-////        List<SetmealFlavor> flavorList = setmealDTO.getFlavors();
-////        // 7.遍历（非空判断）
+//        ??
+//        setmeal.setUpdateTime(LocalDateTime.now());
+//        setmeal.setUpdateUser(ThreadLocalUtil.getCurrentId());
+//        // 6. 取出口味列表
+//        List<SetmealFlavor> flavorList = setmealDTO.getFlavors();
+//        // 7.遍历（非空判断）
 //        /*if (flavorList!=null && flavorList.size()>0) {}*/
 //        if (ArrayUtil.isNotEmpty(flavorList)) {
 //            for (SetmealFlavor setmealFlavor : flavorList) {
@@ -177,4 +184,4 @@ public class SetmealServiceImpl<SetmealFlavorMapper> implements SetmealService {
 //        }
 //
 //    }
-}
+

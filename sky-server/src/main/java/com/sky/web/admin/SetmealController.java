@@ -32,20 +32,20 @@ public class SetmealController {
         return Result.success(pageResult);
     }
 
-    // 回显菜品
+    // 回显套餐
     @GetMapping("/{id}")
     public Result getById(@PathVariable("id") Long id) {
         SetmealVO setmealVO = setmealService.getById(id);
         return Result.success(setmealVO);
     }
 //
-//    //修改菜品
-//    @PutMapping
-//    public Result updateSetmeal(@RequestBody SetmealDTO setmealDTO){
-//        setmealService.updateBySetmealId(setmealDTO);
-//
-//        return Result.success();
-//    }
+    //修改套餐
+    @PutMapping
+    public Result updateSetmeal(@RequestBody SetmealDTO setmealDTO){
+        setmealService.updateBySetmealId(setmealDTO);
+
+        return Result.success();
+    }
 
 //    //批量删除菜品
 //    @DeleteMapping

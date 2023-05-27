@@ -43,9 +43,9 @@ public interface SetmealMapper {
 
 
 
-
-    @AutoFill("update")
-    void updateBySetmeal(Setmeal setmeal);
+//
+//    @AutoFill("update")
+//    void updateBySetmeal(Setmeal setmeal);
 
 
 
