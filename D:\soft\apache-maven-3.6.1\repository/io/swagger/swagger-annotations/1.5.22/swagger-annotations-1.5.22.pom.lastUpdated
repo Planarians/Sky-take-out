@@ -1,0 +1,5 @@
+#NOTE: This is a Maven Resolver internal implementation file, its format can be changed without prior notice.
+#Tue May 23 11:24:48 CST 2023
+@default-maven-public-http\://localhost\:8081/repository/maven-public/.lastUpdated=1684812287754
+http\://localhost\:8081/repository/maven-public/.error=Could not transfer artifact io.swagger\:swagger-annotations\:pom\:1.5.22 from/to maven-public (http\://localhost\:8081/repository/maven-public/)\: Connect to localhost\:8081 [localhost/127.0.0.1, localhost/0\:0\:0\:0\:0\:0\:0\:1, localhost/fe80\:0\:0\:0\:0\:0\:0\:1%1] failed\: Connection refused
+http\://maven.aliyun.com/nexus/content/groups/public/.lastUpdated=1684812288361

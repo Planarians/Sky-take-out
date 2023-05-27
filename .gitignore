@@ -6,7 +6,7 @@
 *.iws
 
 # Compiled class file
-*.class
+
 
 # Log file
 logs/
