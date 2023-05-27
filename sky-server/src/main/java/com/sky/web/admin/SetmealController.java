@@ -18,12 +18,12 @@ public class SetmealController {
     @Autowired
     private SetmealService setmealService;
 
-//    // 菜品新增
-//    @PostMapping
-//    public Result saveSetmealWithFlavor(@RequestBody SetmealDTO setmealDTO) {
-//        setmealService.saveSetmealWithFlavor(setmealDTO);
-//        return Result.success();
-//    }
+    // 菜品套餐
+    @PostMapping("/setmeal")
+    public Result saveSetmealWithDish(@RequestBody SetmealDTO setmealDTO) {
+        setmealService.saveSetmealWithDish(setmealDTO);
+        return Result.success();
+    }
 
     // 分页
     @GetMapping("/page")

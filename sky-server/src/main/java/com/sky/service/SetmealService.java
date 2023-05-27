@@ -8,7 +8,7 @@ import com.sky.vo.SetmealVO;
 import java.util.List;
 
 public interface SetmealService {
-//    void saveSetmealWithFlavor(SetmealDTO setmealDTO);
+    void saveSetmealWithDish(SetmealDTO setmealDTO);
 
     // 分页
     PageResult getPage(SetmealPageDTO setmealPageDTO);
@@ -16,6 +16,8 @@ public interface SetmealService {
     SetmealVO getById(Long id);
 
     void updateBySetmealId(SetmealDTO setmealVO);
+
+
 
 //    void deleteSetmeal(List<Long> ids);
 }

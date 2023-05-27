@@ -49,38 +49,39 @@ public class SetmealServiceImpl<SetmealFlavorMapper> implements SetmealService {
     private com.sky.mapper.DishMapper dishMapper;
 
 
-//    // 菜品新增
-//    @Transactional
-//    @Override
-//    public void saveSetmealWithFlavor(SetmealDTO setmealDTO) {
-//        // 1.参数校验
-//        // 2.业务校验
-//        Setmeal oldSetmeal = setmealMapper.getByName(setmealDTO.getName());
-//        if (oldSetmeal != null) {
-//            throw new BusinessException("菜品已存在");
-//        }
-//        // 3.菜品dto->菜品entity
-//        Setmeal setmeal = BeanUtil.copyProperties(setmealDTO, Setmeal.class);
-//        // 4.补充状态
-//        setmeal.setStatus(StatusConstant.DISABLE); // 禁用
-//        // 5.调用setmealMapper新增 （主键返回）
-//        log.info("菜品新增前id：{}", setmeal.getId());
-//        setmealMapper.insert(setmeal);
-//        log.info("菜品新增后id：{}", setmeal.getId());
-//
-//        // 6. 取出口味列表
-//        List<SetmealFlavor> flavorList = setmealDTO.getFlavors();
-//        // 7.遍历（非空判断）
-//        /*if (flavorList!=null && flavorList.size()>0) {}*/
-//        if (ArrayUtil.isNotEmpty(flavorList)) {
-//            for (SetmealFlavor setmealFlavor : flavorList) {
+    // 套餐新增
+    @Transactional
+    @Override
+    public void saveSetmealWithDish(SetmealDTO setmealDTO) {
+        // 1.参数校验
+        // 2.业务校验
+        Setmeal oldSetmeal = setmealMapper.getByName(setmealDTO.getName());
+        if (oldSetmeal != null) {
+            throw new BusinessException(400,"套餐已存在");
+        }
+        // 3.菜品dto->菜品entity
+        Setmeal setmeal = BeanUtil.copyProperties(setmealDTO, Setmeal.class);
+        // 4.补充状态
+        setmeal.setStatus(StatusConstant.DISABLE); // 禁用
+        // 5.调用setmealMapper新增 （主键返回）
+        log.info("套餐新增前id：{}", setmeal.getId());
+        setmealMPMapper.insert(setmeal);
+        log.info("菜品新增后id：{}", setmeal.getId());
+
+        // 6. 取出口味列表
+        List<Long> dishIds= setmealDishMapper.getDishIdsBySetmealId(setmealDTO.getId());
+        // 7.遍历（非空判断）
+        /*if (flavorList!=null && flavorList.size()>0) {}*/
+        if (ArrayUtil.isNotEmpty(dishIds)) {
+            for (Long dishId : dishIds) {
 //                // 关联菜品id
 //                setmealFlavor.setSetmealId(setmeal.getId());
 //                // 保存口味
+                dishMapper.insert(dishMapper.getById(dishId));
 //                setmealFlavorMapper.insert(setmealFlavor);
-//            }
-//        }
-//    }
+            }
+        }
+    }
 
 
     // 分页
@@ -122,6 +123,7 @@ public class SetmealServiceImpl<SetmealFlavorMapper> implements SetmealService {
 
 
     //修改套餐
+    @Transactional
     @Override
     public void updateBySetmealId(SetmealDTO setmealDTO) {
         Setmeal setmeal = BeanUtil.copyProperties(setmealDTO, Setmeal.class);
