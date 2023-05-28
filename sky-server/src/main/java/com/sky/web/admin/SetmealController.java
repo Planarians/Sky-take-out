@@ -39,26 +39,29 @@ public class SetmealController {
         SetmealVO setmealVO = setmealService.getById(id);
         return Result.success(setmealVO);
     }
-//
+
+    //
     //修改套餐
     @PutMapping
-    public Result updateSetmeal(@RequestBody SetmealDTO setmealDTO){
+    public Result updateSetmeal(@RequestBody SetmealDTO setmealDTO) {
         setmealService.updateBySetmealId(setmealDTO);
 
         return Result.success();
     }
 
-    //批量删除菜品
+    // 修改套餐状态
+    @PostMapping("status/{status}")
+    public Result updateSetmealStatus(@PathVariable("status") Integer status,
+                                      @RequestParam Long id) {
+        setmealService.updateSetmealStatus(status,id);
+        return Result.success();
+    }
+
+    //批量删除套餐
     @DeleteMapping
-    public  Result deleteSetmeal(@RequestParam ArrayList<Long> ids){
+    public Result deleteSetmeal(@RequestParam ArrayList<Long> ids) {
         setmealService.deleteSetmeal(ids);
         return Result.success();
     }
 
-//    //批量删除菜品
-//    @DeleteMapping
-//    public  Result deleteSetmeal(@RequestParam List<Long> ids){
-//        setmealService.deleteSetmeal(ids);
-//        return Result.success();
-//    }
 }

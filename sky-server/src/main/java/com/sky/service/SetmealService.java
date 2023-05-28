@@ -20,6 +20,8 @@ public interface SetmealService {
 
     void deleteSetmeal(ArrayList<Long> idslist);
 
+    void updateSetmealStatus(Integer status,Long id);
+
 
 
 //    void deleteSetmeal(List<Long> ids);

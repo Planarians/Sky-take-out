@@ -156,7 +156,6 @@ public class SetmealServiceImpl<SetmealFlavorMapper> implements SetmealService {
     }
 
 
-
 //        setmealMapper.updateBySetmealId(setmeal);
 //        Long setmealId = setmeal.getId();
 //        setmealFlavorMapper.deleteBySetmealId(setmealId);
@@ -184,7 +183,6 @@ public class SetmealServiceImpl<SetmealFlavorMapper> implements SetmealService {
 //    }
 
 
-
     @Transactional
     @Override
     public void deleteSetmeal(ArrayList<Long> ids) {
@@ -202,5 +200,13 @@ public class SetmealServiceImpl<SetmealFlavorMapper> implements SetmealService {
             setmealMapper.deleteById(id);
         }
 
+    }
+
+    @Transactional
+    @Override
+    public void updateSetmealStatus(Integer status,Long id) {
+        Setmeal setmeal = setmealMapper.getById(id);
+        setmeal.setStatus(Math.abs(setmeal.getStatus()- 1));
+        setmealMapper.updateById(setmeal);
     }
 }
