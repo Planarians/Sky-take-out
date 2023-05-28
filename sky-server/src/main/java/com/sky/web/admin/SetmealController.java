@@ -9,6 +9,7 @@ import com.sky.vo.SetmealVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -47,12 +48,12 @@ public class SetmealController {
         return Result.success();
     }
 
-//    //批量删除菜品
-//    @DeleteMapping
-//    public  Result deleteSetmeal(@RequestParam ArrayList<Long> idslist){
-//        setmealService.deleteSetmeal(idslist);
-//        return Result.success();
-//    }
+    //批量删除菜品
+    @DeleteMapping
+    public  Result deleteSetmeal(@RequestParam ArrayList<Long> ids){
+        setmealService.deleteSetmeal(ids);
+        return Result.success();
+    }
 
 //    //批量删除菜品
 //    @DeleteMapping

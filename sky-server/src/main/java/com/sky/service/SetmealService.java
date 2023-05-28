@@ -5,6 +5,7 @@ import com.sky.dto.SetmealPageDTO;
 import com.sky.result.PageResult;
 import com.sky.vo.SetmealVO;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public interface SetmealService {
@@ -16,6 +17,8 @@ public interface SetmealService {
     SetmealVO getById(Long id);
 
     void updateBySetmealId(SetmealDTO setmealVO);
+
+    void deleteSetmeal(ArrayList<Long> idslist);
 
 
 

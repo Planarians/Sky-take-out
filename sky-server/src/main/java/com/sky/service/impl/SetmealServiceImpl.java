@@ -27,6 +27,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -120,7 +121,6 @@ public class SetmealServiceImpl<SetmealFlavorMapper> implements SetmealService {
     }
 
 
-
     // 回显套餐
     @Override
     public SetmealVO getById(Long id) {
@@ -154,7 +154,7 @@ public class SetmealServiceImpl<SetmealFlavorMapper> implements SetmealService {
 
         setmealMPMapper.updateById(setmeal);
     }
-}
+
 
 
 //        setmealMapper.updateBySetmealId(setmeal);
@@ -178,36 +178,29 @@ public class SetmealServiceImpl<SetmealFlavorMapper> implements SetmealService {
 //
 //    }
 
-
-//    @Transactional
-//    @Override
-//    public void deleteSetmeal(List<Long> ids) {
-//        for (Long id : ids) {
-//            Setmeal setmeal = setmealMapper.getById(id);
-//            Integer setmealStatus = setmeal.getStatus();
-//
-//            if (setmealStatus.equals(1)) {
-//                throw new BusinessException(400, "有启用的菜品 无法删除");
-//            }
-//
-//
-//        }
-//
-//
-//        for (Long setmealId : ids) {
-//
-//            Long k =0l;
-//            k =SetmealSetmealMapper.getSetmealCountById(setmealid);
-//            if () {
-//                throw new BusinessException(400, "有菜品在套餐中 无法删除");
-//            }
-//
-//        }
-//
-//        for (Long id : ids) {
-//            setmealMapper.deleteBySetmealId(id);
-//            setmealFlavorMapper.deleteBySetmealId(id);
-//        }
+    //    @Override
+//    public void deleteSetmeal(ArrayList<Long> idslist) {
 //
 //    }
 
+
+
+    @Transactional
+    @Override
+    public void deleteSetmeal(ArrayList<Long> ids) {
+        for (Long id : ids) {
+            Setmeal setmeal = setmealMapper.getById(id);
+            Integer setmealStatus = setmeal.getStatus();
+
+            if (setmealStatus.equals(1)) {
+                throw new BusinessException(400, "启售中的菜品 无法删除");
+            }
+
+
+        }
+        for (Long id : ids) {
+            setmealMapper.deleteById(id);
+        }
+
+    }
+}
