@@ -1,5 +1,6 @@
 package com.sky.mapper;
 
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.sky.annotation.AutoFill;
 import com.sky.dto.DishPageDTO;
 import com.sky.entity.Dish;
@@ -17,7 +18,7 @@ import java.util.List;
 
 
 @Mapper
-public interface SetmealDishMapper {
+public interface SetmealDishMapper extends BaseMapper<SetmealDish> {
 
 
     @Select("select dish_id from sky_take_out.setmeal_dish where setmeal_id =#{id}")

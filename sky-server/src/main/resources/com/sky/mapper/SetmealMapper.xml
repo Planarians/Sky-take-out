@@ -63,17 +63,17 @@
 
 
     <select id="getList" resultType="com.sky.vo.SetmealVO">
-        select d.*,c.name as category_name from sky_take_out.setmeal d left join sky_take_out.category c on d.category_id =
-        c.id
+        select sky_take_out.setmeal.*,sky_take_out.dish.name as dish_name from sky_take_out.setmeal left join sky_take_out.dish on sky_take_out.setmeal.category_id =
+        sky_take_out.dish.id
         <where>
             <if test="name!=null and name!=''">
-                and d.name like concat('%',#{name},'%')
+                and sky_take_out.setmeal.name like concat('%',#{name},'%')
             </if>
             <if test="categoryId!=null">
-                and d.category_id = #{categoryId}
+                and sky_take_out.setmeal.dish_id = #{categoryId}
             </if>
             <if test="status!=null">
-                and d.status = #{status}
+                and sky_take_out.setmeal.status = #{status}
             </if>
         </where>
         order by update_time desc

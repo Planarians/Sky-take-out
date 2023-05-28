@@ -1,14 +1,16 @@
 package com.sky.mapper;
 
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.sky.annotation.AutoFill;
 import com.sky.dto.CategoryPageQueryDTO;
 import com.sky.entity.Category;
+import com.sky.entity.SetmealDish;
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Select;
 
 import java.util.List;
 
-public interface CategoryMapper {
+public interface CategoryMapper extends BaseMapper<Category> {
     List<Category> getList(CategoryPageQueryDTO categoryPageQueryDTO);
 
 
@@ -16,8 +18,8 @@ public interface CategoryMapper {
     Category getByName(String name);
 
 
-    @AutoFill("insert")
-    void insert(Category category);
+//    @AutoFill("insert")
+//    void insert(Category category);
 
 
     // 根据id删除
@@ -25,6 +27,7 @@ public interface CategoryMapper {
     void deleteById(Long id);
 
 
+    @Override
     @AutoFill("update")
-    void updateById(Category category);
+    int updateById(Category category);
 }

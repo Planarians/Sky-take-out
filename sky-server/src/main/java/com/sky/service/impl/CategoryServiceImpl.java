@@ -2,6 +2,7 @@ package com.sky.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.StrUtil;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.sky.constant.StatusConstant;
@@ -39,6 +40,7 @@ public class CategoryServiceImpl implements CategoryService {
         PageHelper.startPage(categoryPageQueryDTO.getPage(), categoryPageQueryDTO.getPageSize());
         // 2.查询list
         List<Category> list = categoryMapper.getList(categoryPageQueryDTO);
+
         Page<Category> page = (Page<Category>) list;
         // 3.返回分页
         return new PageResult(page.getTotal(), page.getResult());

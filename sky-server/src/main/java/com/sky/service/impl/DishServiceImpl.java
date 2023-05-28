@@ -154,9 +154,9 @@ public class DishServiceImpl<DishFlavorMapper> implements DishService {
 
         for (Long dishId : ids) {
 
-            Long k = 0l;
+            Long k = 0L;
             k = setmealDishMapper.getDishCountById(dishId);
-            if (k >= 1l) {
+            if (k >= 1L) {
                 throw new BusinessException(400, "有菜品在套餐中 无法删除");
             }
 

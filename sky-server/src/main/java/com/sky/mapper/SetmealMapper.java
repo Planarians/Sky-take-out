@@ -1,5 +1,6 @@
 package com.sky.mapper;
 
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.sky.annotation.AutoFill;
 import com.sky.dto.SetmealPageDTO;
 import com.sky.entity.Setmeal;
@@ -12,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Mapper
-public interface SetmealMapper {
+public interface SetmealMapper extends BaseMapper<Setmeal> {
 
 
 //    @Select("select * from sky_take_out.setmeal where  ")
@@ -34,7 +35,8 @@ public interface SetmealMapper {
 //    @AutoFill("insert")
 //    void insert(Setmeal setmeal);
 
-    // 条件查询菜品列表
+    // 条件查询套餐列表
+
     List<SetmealVO> getList(SetmealPageDTO setmealPageDTO);
 
     // 根据id查询

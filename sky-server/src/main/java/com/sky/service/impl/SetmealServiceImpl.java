@@ -2,15 +2,16 @@ package com.sky.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.ArrayUtil;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.sky.constant.StatusConstant;
+import com.sky.dto.CategoryPageQueryDTO;
 import com.sky.dto.SetmealDTO;
 import com.sky.dto.SetmealPageDTO;
-import com.sky.entity.Dish;
-import com.sky.entity.DishFlavor;
-import com.sky.entity.Setmeal;
-import com.sky.entity.SetmealDish;
+import com.sky.entity.*;
 import com.sky.exception.BusinessException;
 import com.sky.mapper.DishMapper;
 import com.sky.mapper.SetmealDishMapper;
@@ -21,11 +22,13 @@ import com.sky.service.SetmealService;
 import com.sky.vo.DishVO;
 import com.sky.vo.SetmealVO;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -57,7 +60,7 @@ public class SetmealServiceImpl<SetmealFlavorMapper> implements SetmealService {
         // 2.业务校验
         Setmeal oldSetmeal = setmealMapper.getByName(setmealDTO.getName());
         if (oldSetmeal != null) {
-            throw new BusinessException(400,"套餐已存在");
+            throw new BusinessException(400, "套餐已存在");
         }
         // 3.菜品dto->菜品entity
         Setmeal setmeal = BeanUtil.copyProperties(setmealDTO, Setmeal.class);
@@ -69,7 +72,7 @@ public class SetmealServiceImpl<SetmealFlavorMapper> implements SetmealService {
         log.info("菜品新增后id：{}", setmeal.getId());
 
         // 6. 取出口味列表
-        List<Long> dishIds= setmealDishMapper.getDishIdsBySetmealId(setmealDTO.getId());
+        List<Long> dishIds = setmealDishMapper.getDishIdsBySetmealId(setmealDTO.getId());
         // 7.遍历（非空判断）
         /*if (flavorList!=null && flavorList.size()>0) {}*/
         if (ArrayUtil.isNotEmpty(dishIds)) {
@@ -87,14 +90,35 @@ public class SetmealServiceImpl<SetmealFlavorMapper> implements SetmealService {
     // 分页
     @Override
     public PageResult getPage(SetmealPageDTO setmealPageDTO) {
+        QueryWrapper<Setmeal> queryWrapper = new QueryWrapper<>();
         // 1.开启分页
         PageHelper.startPage(setmealPageDTO.getPage(), setmealPageDTO.getPageSize());
         // 2.查询list
-        List<SetmealVO> voList = setmealMapper.getList(setmealPageDTO);
-        Page<SetmealVO> page = (Page<SetmealVO>) voList;
-        // 3.返回分页
-        return new PageResult(page.getTotal(), page.getResult());
+        if (StringUtils.isNotBlank(setmealPageDTO.getName())) {
+            queryWrapper.like("name", setmealPageDTO.getName());
+        }
+
+        if (setmealPageDTO.getCategoryId() != null) {
+            queryWrapper.eq("category_id", setmealPageDTO.getCategoryId());
+        }
+
+        if (setmealPageDTO.getStatus() != null) {
+            queryWrapper.eq("status", setmealPageDTO.getStatus());
+        }
+
+        queryWrapper.orderByAsc("name", "category_id", "status");
+
+        List<Setmeal> list = setmealMapper.selectList(queryWrapper);
+        // 修改后的代码
+        PageInfo<SetmealVO> pageInfo = new PageInfo<>(list.stream().map(setmeal -> {
+            SetmealVO setmealVO = new SetmealVO();
+            BeanUtils.copyProperties(setmeal, setmealVO);
+            return setmealVO;
+        }).collect(Collectors.toList()));
+
+        return new PageResult(pageInfo.getTotal(), pageInfo.getList());
     }
+
 
 
     // 回显套餐
