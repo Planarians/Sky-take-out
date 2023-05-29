@@ -70,7 +70,7 @@
                 and sky_take_out.setmeal.name like concat('%',#{name},'%')
             </if>
             <if test="categoryId!=null">
-                and sky_take_out.setmeal.dish_id = #{categoryId}
+                and sky_take_out.setmeal.category_id = #{categoryId}
             </if>
             <if test="status!=null">
                 and sky_take_out.setmeal.status = #{status}

@@ -23,6 +23,9 @@ public interface CategoryService {
 
     // 根据类型查询分类
     List<Category> getList(Integer type);
+
+    List<Category> getParamList(CategoryDTO categoryDTO);
+
 }
 
 

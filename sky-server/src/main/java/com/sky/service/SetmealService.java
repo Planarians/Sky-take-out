@@ -22,7 +22,8 @@ public interface SetmealService {
 
     void updateSetmealStatus(Integer status,Long id);
 
-
+    // 条件查询
+    List<SetmealVO> getParamList(SetmealPageDTO setmealPageDTO);
 
 //    void deleteSetmeal(List<Long> ids);
 }

@@ -3,6 +3,7 @@ package com.sky.service.impl;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.sky.constant.StatusConstant;
@@ -10,6 +11,7 @@ import com.sky.context.ThreadLocalUtil;
 import com.sky.dto.CategoryDTO;
 import com.sky.dto.CategoryPageQueryDTO;
 import com.sky.entity.Category;
+import com.sky.entity.Setmeal;
 import com.sky.exception.BusinessException;
 import com.sky.mapper.CategoryMapper;
 import com.sky.mapper.DishMapper;
@@ -55,6 +57,30 @@ public class CategoryServiceImpl implements CategoryService {
         categoryPageQueryDTO.setType(type);
         // 2.调用mapper查询并返回
         return categoryMapper.getList(categoryPageQueryDTO);
+    }
+
+    @Override
+    public List<Category> getParamList(CategoryDTO categoryDTO) {
+
+        QueryWrapper<Category> queryWrapper = new QueryWrapper<>();
+        // 2.查询list
+        // 2.查询list
+        if (StringUtils.isNotBlank(categoryDTO.getName())) {
+            queryWrapper.like("name", categoryDTO.getName());
+        }
+
+        if (categoryDTO.getType() != null) {
+            queryWrapper.eq("type", categoryDTO.getType());
+        }
+
+        if (categoryDTO.getStatus() != null) {
+            queryWrapper.eq("status", categoryDTO.getStatus());
+        }
+
+        queryWrapper.orderByAsc("name", "type", "status");
+
+        List<Category> list =categoryMapper.selectList(queryWrapper);
+        return list;
     }
 
     // 新增分类

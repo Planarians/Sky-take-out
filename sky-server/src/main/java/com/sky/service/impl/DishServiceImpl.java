@@ -189,4 +189,23 @@ public class DishServiceImpl<DishFlavorMapper> implements DishService {
         dish.setStatus(Math.abs(dish.getStatus() - 1));
         dishMapper.updateByDishId(dish);
     }
+
+
+    // 条件查询
+    @Override
+    public List<DishVO> getParamList(DishPageDTO dishPageDTO) {
+        // 1.先查询菜品列表
+        List<DishVO> voList = dishMapper.getList(dishPageDTO);
+
+        // 2.遍历菜品
+        voList.forEach(dishVO -> {
+            // 根据菜品id查询口味
+            List<DishFlavor> flavorList = dishFlavorMapper.getListByDishId(dishVO.getId());
+            // 将口味封装到vo
+            dishVO.setFlavors(flavorList);
+        });
+
+        // 3.返回
+        return voList;
+    }
 }

@@ -18,13 +18,6 @@ public interface EmployeeMapper {
     // 条件查询
     List<Employee> getList(String name);
 
-
-
-
-
-
-
-
     //根据手机号查询
     @Select("select * from sky_take_out.employee where phone =#{phone}")
     Employee getByPhone(String phone);

@@ -120,6 +120,12 @@ public class SetmealServiceImpl<SetmealFlavorMapper> implements SetmealService {
         return new PageResult(pageInfo.getTotal(), pageInfo.getList());
     }
 
+    // 条件查询
+    @Override
+    public List<SetmealVO> getParamList(SetmealPageDTO setmealPageDTO) {
+        return setmealMapper.getList(setmealPageDTO);
+    }
+
 
     // 回显套餐
     @Override

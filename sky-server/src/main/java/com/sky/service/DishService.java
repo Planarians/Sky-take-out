@@ -22,4 +22,7 @@ public interface DishService {
 
     void changeDishStatus(Integer status, Long id);
 
+    // 条件查询
+    List<DishVO> getParamList(DishPageDTO dishPageDTO);
+
 }
