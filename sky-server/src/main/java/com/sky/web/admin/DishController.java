@@ -35,6 +35,7 @@ public class DishController {
         return Result.success(pageResult);
     }
 
+
     // 回显菜品
     @GetMapping("/{id}")
     public Result getById(@PathVariable("id") Long id) {
@@ -66,6 +67,8 @@ public class DishController {
         dishService.changeDishStatus(status,id);
         return Result.success();
     }
+
+
 
 
 

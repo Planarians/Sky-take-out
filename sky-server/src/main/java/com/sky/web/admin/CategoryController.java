@@ -9,6 +9,7 @@ import com.sky.properties.JwtProperties;
 import com.sky.result.PageResult;
 import com.sky.result.Result;
 import com.sky.service.CategoryService;
+import com.sky.vo.DishVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -36,6 +37,13 @@ public class CategoryController {
     public Result getPage(CategoryPageQueryDTO categoryPageQueryDTO) {
         PageResult pageResult = categoryService.getPage(categoryPageQueryDTO);
         return Result.success(pageResult);
+    }
+
+    // 根据类型查询分类
+    @GetMapping("/list")
+    public Result getList(Integer type) {
+        List<Category> list = categoryService.getList(type);
+        return Result.success(list);
     }
 
 

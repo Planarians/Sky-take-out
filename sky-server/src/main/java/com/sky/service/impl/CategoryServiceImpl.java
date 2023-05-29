@@ -46,6 +46,17 @@ public class CategoryServiceImpl implements CategoryService {
         return new PageResult(page.getTotal(), page.getResult());
     }
 
+
+    // 根据类型查询分类
+    @Override
+    public List<Category> getList(Integer type) {
+        // 1.将type封装到dto
+        CategoryPageQueryDTO categoryPageQueryDTO = new CategoryPageQueryDTO();
+        categoryPageQueryDTO.setType(type);
+        // 2.调用mapper查询并返回
+        return categoryMapper.getList(categoryPageQueryDTO);
+    }
+
     // 新增分类
     @Override
     public void save(CategoryDTO categoryDTO) {
