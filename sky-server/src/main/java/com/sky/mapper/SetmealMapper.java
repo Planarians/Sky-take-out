@@ -39,9 +39,12 @@ public interface SetmealMapper extends BaseMapper<Setmeal> {
 
     List<SetmealVO> getList(SetmealPageDTO setmealPageDTO);
 
+
     // 根据id查询
     @Select("select * from sky_take_out.setmeal where id=#{id}")
     Setmeal getById(Long id);
+
+
 
 
 

@@ -30,6 +30,7 @@ public class UserServiceImpl implements UserService {
     // 微信登录
     @Override
     public User login(UserLoginDTO userLoginDTO) {
+
         // 1.参数校验
         if (StrUtil.isBlank(userLoginDTO.getCode())) {
             throw new BusinessException("code不能为空");
