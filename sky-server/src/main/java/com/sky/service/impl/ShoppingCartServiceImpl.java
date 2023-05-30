@@ -1,5 +1,6 @@
 package com.sky.service.impl;
 
+import cn.hutool.core.bean.BeanUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.sky.context.ThreadLocalUtil;
 import com.sky.dto.ShoppingCartDTO;
@@ -47,7 +48,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
 
         QueryWrapper<ShoppingCart> queryWrapper = new QueryWrapper<>();
 
-        ShoppingCart shoppingCart = null;
+        List<ShoppingCart> shoppingCartList = null;
 
         if (shoppingCartDTO.getSetmealId() != null) {
             queryWrapper.eq("user_id", ThreadLocalUtil.getCurrentId());
@@ -65,44 +66,52 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
         queryWrapper.orderByAsc("setmeal_id", "dish_id", "dish_flavor");
 
 
-        shoppingCart = shoppingCartMapper.selectOne(queryWrapper);
+        shoppingCartList = shoppingCartMapper.selectList(queryWrapper);
 
+        ShoppingCart shoppingCart = BeanUtil.copyProperties(shoppingCartDTO, ShoppingCart.class);
 
         //没有的情况 增加一条
-        if (shoppingCart) {
-            shoppingCartList.forEach(shoppingCart -> {
-                shoppingCart.setUserId(ThreadLocalUtil.getCurrentId());
-                shoppingCart.setNumber(1);
-                shoppingCart.setCreateTime(LocalDateTime.now());
+        if (shoppingCartList.isEmpty()) {
+
+
+            shoppingCart.setUserId(ThreadLocalUtil.getCurrentId());
+            shoppingCart.setNumber(1);
+            shoppingCart.setCreateTime(LocalDateTime.now());
+
+            //套餐
+            if (Objects.isNull(shoppingCart.getDishId())) {
+                shoppingCart.setImage(setmealMapper.getById(shoppingCart.getSetmealId()).getImage());
+                shoppingCart.setName(setmealMapper.getById(shoppingCart.getSetmealId()).getName());
+                shoppingCart.setAmount(setmealMapper.getById(shoppingCart.getSetmealId()).getPrice());
+            } else {
+                shoppingCart.setImage(dishMapper.getById(shoppingCart.getDishId()).getImage());
+                shoppingCart.setName(dishMapper.getById(shoppingCart.getDishId()).getName());
                 shoppingCart.setAmount(dishMapper.getById(shoppingCart.getDishId()).getPrice());
 
-                //套餐
-                if(Objects.isNull(shoppingCart.getDishId())) {
-                    shoppingCart.setImage(setmealMapper.getById(shoppingCart.getDishId()).getImage());
-                }
-                else{
-                    shoppingCart.setImage(dishMapper.getById(shoppingCart.getDishId()).getImage());
-                }
-                shoppingCartMapper.insert(shoppingCart);
-
-
-            });
-
+            }
+            shoppingCartMapper.insert(shoppingCart);
             //shoppingCart->{shoppingCartMapper.insert(shoppingCart);});
-
         } else {
 
             //有的情况
-            shoppingCartList.forEach(shoppingCart -> {
-                        shoppingCart.setNumber(shoppingCart.getNumber()+1);
-                        Long l = shoppingCart.getAmount().longValue();
-                        shoppingCart.setAmount(BigDecimal.valueOf(l + (l / shoppingCart.getNumber())));
-                        // shoppingCart.getAmount()/shoppingCart.getNumber());
-                        shoppingCartMapper.update(shoppingCart, null);
-                    }
-            );
 
+            shoppingCart = shoppingCartList.get(0);
+            shoppingCart.setNumber(shoppingCart.getNumber() + 1);
+            Long l = shoppingCart.getAmount().longValue();
+           // shoppingCart.setAmount(BigDecimal.valueOf(l + (l /shoppingCart.getNumber())));
+            // shoppingCart.getAmount()/shoppingCart.getNumber());
+            shoppingCartMapper.updateNumberAndAmountByIdMy(shoppingCart);
+            //shoppingCartMapper.updateById(shoppingCart);
+            //shoppingCartMapper.updateNumberAndAmountById(shoppingCart.getNumber(),shoppingCart.getAmount(),shoppingCart.getId());
         }
     }
 
+    @Override
+    public void cleanCart() {
+        shoppingCartMapper.deleteByUserId(ThreadLocalUtil.getCurrentId());
+    }
 }
+
+
+//    Caused by: org.apache.ibatis.reflection.ReflectionException: There is no getter for property named 'et' in 'class com.sky.entity.ShoppingCart'
+//        at org.apache.ibatis.reflection.Reflector.getGetInvoker(Reflector.java:375) ~[mybatis-3.5.7.jar:3.5.7]

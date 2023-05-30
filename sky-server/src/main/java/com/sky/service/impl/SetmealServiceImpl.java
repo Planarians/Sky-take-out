@@ -4,22 +4,17 @@ import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.ArrayUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
-import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.sky.constant.StatusConstant;
-import com.sky.dto.CategoryPageQueryDTO;
 import com.sky.dto.SetmealDTO;
 import com.sky.dto.SetmealPageDTO;
 import com.sky.entity.*;
 import com.sky.exception.BusinessException;
-import com.sky.mapper.DishMapper;
 import com.sky.mapper.SetmealDishMapper;
-import com.sky.mapper.SetmealMPMapper;
 import com.sky.mapper.SetmealMapper;
 import com.sky.result.PageResult;
 import com.sky.service.SetmealService;
-import com.sky.vo.DishVO;
 import com.sky.vo.SetmealVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
@@ -36,8 +31,7 @@ import java.util.stream.Collectors;
 public class SetmealServiceImpl<SetmealFlavorMapper> implements SetmealService {
 
 
-    @Autowired
-    private SetmealMPMapper setmealMPMapper;
+
     @Autowired
     private SetmealMapper setmealMapper;
 
@@ -69,7 +63,7 @@ public class SetmealServiceImpl<SetmealFlavorMapper> implements SetmealService {
         setmeal.setStatus(StatusConstant.DISABLE); // 禁用
         // 5.调用setmealMapper新增 （主键返回）
         log.info("套餐新增前id：{}", setmeal.getId());
-        setmealMPMapper.insert(setmeal);
+        setmealMapper.insert(setmeal);
         log.info("菜品新增后id：{}", setmeal.getId());
 
         // 6. 取出口味列表
@@ -158,7 +152,7 @@ public class SetmealServiceImpl<SetmealFlavorMapper> implements SetmealService {
     public void updateBySetmealId(SetmealDTO setmealDTO) {
         Setmeal setmeal = BeanUtil.copyProperties(setmealDTO, Setmeal.class);
 
-        setmealMPMapper.updateById(setmeal);
+        setmealMapper.updateById(setmeal);
     }
 
 

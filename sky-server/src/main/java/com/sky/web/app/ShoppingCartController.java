@@ -4,6 +4,7 @@ import com.sky.dto.ShoppingCartDTO;
 import com.sky.entity.ShoppingCart;
 import com.sky.result.Result;
 import com.sky.service.ShoppingCartService;
+import org.apache.ibatis.annotations.Delete;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -31,6 +32,16 @@ public class ShoppingCartController {
 
         return Result.success();
     }
+
+
+    @DeleteMapping("/clean")
+    public Result cleanCart(){
+        shoppingCartService.cleanCart();
+        return Result.success();
+
+    }
+
+
 
 
 

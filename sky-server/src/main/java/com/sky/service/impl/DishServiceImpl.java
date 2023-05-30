@@ -13,7 +13,6 @@ import com.sky.entity.Setmeal;
 import com.sky.exception.BusinessException;
 import com.sky.mapper.DishMapper;
 import com.sky.mapper.SetmealDishMapper;
-import com.sky.mapper.SetmealMPMapper;
 import com.sky.mapper.SetmealMapper;
 import com.sky.result.PageResult;
 import com.sky.service.DishService;
@@ -31,8 +30,6 @@ import java.util.List;
 public class DishServiceImpl<DishFlavorMapper> implements DishService {
 
 
-    @Autowired
-    private SetmealMPMapper setmealMPMapper;
 
     @Autowired
     private DishMapper dishMapper;
@@ -180,7 +177,7 @@ public class DishServiceImpl<DishFlavorMapper> implements DishService {
         for (Long setmealId : setmealIds) {
             Setmeal setmeal =setmealMapper.getById(setmealId);
             setmeal.setStatus(Math.abs(setmeal.getStatus()));
-            setmealMPMapper.updateById(setmeal);
+            setmealMapper.updateById(setmeal);
         }
 
 
