@@ -25,10 +25,32 @@ public class AddressBookController {
         return Result.success(list);
 
     }
+
     @PostMapping
-    public Result save(AddressBook addressBook){
+    public Result save(@RequestBody AddressBook addressBook) {
         addressBookService.save(addressBook);
         return Result.success();
     }
+
+    @GetMapping("/default")
+    public Result getDefault() {
+        AddressBook addressBook = addressBookService.getDefault();
+        return Result.success(addressBook);
+    }
+
+
+    @GetMapping("/{id}")
+    public Result getById(@PathVariable("id") Long id) {
+        AddressBook addressBook = addressBookService.getById(id);
+        return Result.success(addressBook);
+    }
+
+
+    @PutMapping
+    public Result update(@RequestBody AddressBook addressBook) {
+       AddressBook addressBook1 = addressBookService.update(addressBook);
+        return Result.success(addressBook1);
+    }
+
 
 }
