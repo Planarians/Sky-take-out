@@ -14,4 +14,7 @@ public interface ShoppingCartService {
     void save(ShoppingCartDTO shoppingCartDTO);
 
     void cleanCart();
+
+    void subCart(ShoppingCartDTO shoppingCartDTO);
+
 }

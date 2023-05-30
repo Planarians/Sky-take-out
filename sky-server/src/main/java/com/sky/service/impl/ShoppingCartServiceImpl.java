@@ -98,7 +98,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
             shoppingCart = shoppingCartList.get(0);
             shoppingCart.setNumber(shoppingCart.getNumber() + 1);
             Long l = shoppingCart.getAmount().longValue();
-           // shoppingCart.setAmount(BigDecimal.valueOf(l + (l /shoppingCart.getNumber())));
+            // shoppingCart.setAmount(BigDecimal.valueOf(l + (l /shoppingCart.getNumber())));
             // shoppingCart.getAmount()/shoppingCart.getNumber());
             shoppingCartMapper.updateNumberAndAmountByIdMy(shoppingCart);
             //shoppingCartMapper.updateById(shoppingCart);
@@ -109,6 +109,44 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     @Override
     public void cleanCart() {
         shoppingCartMapper.deleteByUserId(ThreadLocalUtil.getCurrentId());
+    }
+
+
+    //删除一个商品
+    @Override
+    public void subCart(ShoppingCartDTO shoppingCartDTO) {
+        QueryWrapper<ShoppingCart> queryWrapper = new QueryWrapper<>();
+
+        List<ShoppingCart> shoppingCartList = null;
+
+        if (shoppingCartDTO.getSetmealId() != null) {
+            queryWrapper.eq("user_id", ThreadLocalUtil.getCurrentId());
+        }
+        if (shoppingCartDTO.getSetmealId() != null) {
+            queryWrapper.eq("setmeal_id", shoppingCartDTO.getSetmealId());
+        }
+        if (shoppingCartDTO.getDishId() != null) {
+            queryWrapper.eq("dish_id", shoppingCartDTO.getDishId());
+        }
+        if (shoppingCartDTO.getDishFlavor() != null) {
+            queryWrapper.eq("dish_flavor", shoppingCartDTO.getDishFlavor());
+        }
+
+        queryWrapper.orderByAsc("setmeal_id", "dish_id", "dish_flavor");
+
+
+        shoppingCartList = shoppingCartMapper.selectList(queryWrapper);
+        ShoppingCart shoppingCart= shoppingCartList.get(0);
+        shoppingCart.setNumber(shoppingCart.getNumber()-1);
+        if(shoppingCart.getNumber()==0){shoppingCartMapper.deleteById(shoppingCart.getId());return;}
+//
+        shoppingCartMapper.updateNumberAndAmountByIdMy(shoppingCart);
+
+    //        if(shoppingCart.getDishId()!=null){
+//
+//        }
+
+        return;
     }
 }
 
