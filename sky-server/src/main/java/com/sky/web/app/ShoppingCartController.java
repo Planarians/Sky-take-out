@@ -1,12 +1,11 @@
 package com.sky.web.app;
 
+import com.sky.dto.ShoppingCartDTO;
 import com.sky.entity.ShoppingCart;
 import com.sky.result.Result;
 import com.sky.service.ShoppingCartService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -23,4 +22,16 @@ public class ShoppingCartController {
         List<ShoppingCart> list = shoppingCartService.getList();
         return Result.success(list);
     }
+
+    //添加购物车
+    @PostMapping("/add")
+    public Result addCart(@RequestBody ShoppingCartDTO shoppingCartDTO) {
+
+        shoppingCartService.save(shoppingCartDTO);
+
+        return Result.success();
+    }
+
+
+
 }
