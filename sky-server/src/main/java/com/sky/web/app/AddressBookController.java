@@ -53,10 +53,18 @@ public class AddressBookController {
         return Result.success();
     }
 
+
     //删除
     @DeleteMapping
-    public Result deleteById(@RequestParam Long id){
+    public Result deleteById(@RequestParam Long id) {
         addressBookService.deleteById(id);
+        return Result.success();
+    }
+
+    //修改状态
+    @PutMapping("/default")
+    public Result updateDefault(@RequestBody AddressBook addressBook) {
+        addressBookService.updateDefault(addressBook);
         return Result.success();
     }
 

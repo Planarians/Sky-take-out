@@ -6,6 +6,7 @@ import com.sky.mapper.AddressBookMapper;
 import com.sky.service.AddressBookService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -33,6 +34,8 @@ public class AddressBookServiceImpl implements AddressBookService {
         // addressBookList;
     }
 
+
+    @Transactional
     @Override
     public void save(AddressBook addressBook) {
         addressBook.setUserId(ThreadLocalUtil.getCurrentId());
@@ -55,6 +58,7 @@ public class AddressBookServiceImpl implements AddressBookService {
 
     }
 
+
     @Override
     public AddressBook getById(Long id) {
         return addressBookMapper.selectById(id);
@@ -62,14 +66,30 @@ public class AddressBookServiceImpl implements AddressBookService {
 
 
 
+    @Transactional
     @Override
     public void update(AddressBook addressBook) {
         addressBookMapper.updateById(addressBook);
 
     }
 
+
+    @Transactional
     @Override
     public void deleteById(Long id) {
         addressBookMapper.deleteById(id);
+    }
+
+
+    @Transactional
+    @Override
+    public void updateDefault(AddressBook addressBook) {
+        List<AddressBook> addressBookList = addressBookMapper.getByUserId(ThreadLocalUtil.getCurrentId());
+        addressBookList.forEach(addressBook1 -> {addressBook1.setIsDefault(0);addressBookMapper.updateById(addressBook1);});
+       // AddressBook addressBook = addressBookMapper.selectById(id);
+
+        addressBook=addressBookMapper.selectById(addressBook.getId());
+        addressBook.setIsDefault(1);
+        addressBookMapper.updateById(addressBook);
     }
 }
