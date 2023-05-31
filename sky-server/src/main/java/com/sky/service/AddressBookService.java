@@ -16,6 +16,8 @@ public interface AddressBookService {
 
     AddressBook getById(Long id);
 
-    AddressBook update(AddressBook addressBook);
+    void update(AddressBook addressBook);
+
+    void deleteById(Long id);
 
 }

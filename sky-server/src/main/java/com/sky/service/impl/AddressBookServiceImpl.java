@@ -60,11 +60,16 @@ public class AddressBookServiceImpl implements AddressBookService {
         return addressBookMapper.selectById(id);
     }
 
+
+
     @Override
-    public AddressBook update(AddressBook addressBook) {
-        addressBookMapper.getByUserId()
-        return null;
+    public void update(AddressBook addressBook) {
+        addressBookMapper.updateById(addressBook);
+
     }
 
-
+    @Override
+    public void deleteById(Long id) {
+        addressBookMapper.deleteById(id);
+    }
 }

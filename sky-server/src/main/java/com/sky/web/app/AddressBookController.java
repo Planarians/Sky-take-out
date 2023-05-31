@@ -46,10 +46,18 @@ public class AddressBookController {
     }
 
 
+    //修改
     @PutMapping
     public Result update(@RequestBody AddressBook addressBook) {
-       AddressBook addressBook1 = addressBookService.update(addressBook);
-        return Result.success(addressBook1);
+        addressBookService.update(addressBook);
+        return Result.success();
+    }
+
+    //删除
+    @DeleteMapping
+    public Result deleteById(@RequestParam Long id){
+        addressBookService.deleteById(id);
+        return Result.success();
     }
 
 
