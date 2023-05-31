@@ -79,6 +79,8 @@ public class Orders implements Serializable {
     private String address;
 
     //收货人
+
+
     private String consignee;
 
     //订单取消原因
