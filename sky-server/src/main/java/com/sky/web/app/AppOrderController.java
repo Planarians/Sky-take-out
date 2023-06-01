@@ -2,8 +2,11 @@ package com.sky.web.app;
 
 
 import com.sky.dto.OrdersCancelDTO;
+import com.sky.dto.OrdersPageQueryDTO;
 import com.sky.dto.OrdersPaymentDTO;
 import com.sky.dto.OrdersSubmitDTO;
+import com.sky.properties.JwtProperties;
+import com.sky.result.PageResult;
 import com.sky.result.Result;
 import com.sky.service.OrderService;
 import com.sky.vo.OrderPaymentVO;
@@ -12,7 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-
+import javax.websocket.server.PathParam;
 
 
 @Slf4j
@@ -23,6 +26,12 @@ public class AppOrderController {
     @Autowired
     private OrderService orderService;
 
+    @Autowired
+    private JwtProperties jwtProperties;
+
+//    @Autowired
+//    private
+//
 
 //
 //    @GetMapping("/historyOrders")
@@ -48,5 +57,25 @@ public class AppOrderController {
         log.info("生成预支付交易单：{}", orderPaymentVO);
         return Result.success(orderPaymentVO);
     }
+
+    @GetMapping("/historyOrders")
+    public Result getPage(OrdersPageQueryDTO ordersPageQueryDTO) {
+        PageResult pageResult = orderService.getPage(ordersPageQueryDTO);
+
+        return Result.success(pageResult);
+    }
+
+
+    GetMapping("/orderDetail/{id}")
+
+    public Result getOrderDetail(@PathParam(Long id)) {
+
+
+
+        return null;
+
+
+    }
+
 
 }

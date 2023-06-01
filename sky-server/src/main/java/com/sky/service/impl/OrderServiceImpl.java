@@ -5,7 +5,12 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.db.sql.Order;
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
+import com.sky.context.ThreadLocalUtil;
+import com.sky.dto.OrdersPageQueryDTO;
 import com.sky.dto.OrdersPaymentDTO;
 import com.sky.dto.OrdersSubmitDTO;
 import com.sky.entity.AddressBook;
@@ -17,9 +22,12 @@ import com.sky.mapper.AddressBookMapper;
 import com.sky.mapper.OrderDetailMapper;
 import com.sky.mapper.OrderMapper;
 import com.sky.mapper.ShoppingCartMapper;
+import com.sky.result.PageResult;
 import com.sky.service.OrderService;
+import com.sky.service.ShoppingCartService;
 import com.sky.vo.OrderPaymentVO;
 import com.sky.vo.OrderSubmitVO;
+import com.sky.vo.OrderVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -52,6 +60,93 @@ public class OrderServiceImpl implements OrderService {
     @Autowired
     private ShoppingCartMapper shoppingCartMapper;
 
+    @Autowired
+    private ShoppingCartService shoppingCartService;
+
+
+    @Override
+    public PageResult getPage(OrdersPageQueryDTO ordersPageQueryDTO) {
+        //Orders orders = orderMapper.selectById(ordersPageQueryDTO.get)
+        ordersPageQueryDTO.setUserId(ThreadLocalUtil.getCurrentId());
+        PageHelper.startPage(ordersPageQueryDTO.getPage(), ordersPageQueryDTO.getPageSize());
+      //  List<OrderVO> voList = orderMapper.getList(ordersPageQueryDTO);
+
+        QueryWrapper<OrderVO> queryWrapper= new QueryWrapper<>();
+
+        if(ordersPageQueryDTO.getNumber()!=null){
+            queryWrapper.eq("number",ordersPageQueryDTO.getNumber());
+        }
+        if(ordersPageQueryDTO.getPhone()!=null) {
+            queryWrapper.eq("phone", ordersPageQueryDTO.getPhone());
+        }
+        if(ordersPageQueryDTO.getStatus()!=null) {
+            queryWrapper.eq("status", ordersPageQueryDTO.getStatus());
+        }
+
+        queryWrapper.orderByDesc("order_time");
+
+
+       // queryWrapper.orderByAsc("number","phone","status");
+
+      //  List<Orders> ordersList = orderMapper.getByUserId(ThreadLocalUtil.getCurrentId());
+       // List<OrderDetail> orderDetailList = null;
+        List<Orders> ordersList = orderMapper.getAll(queryWrapper);
+        queryWrapper.orderByDesc();
+
+        List<OrderVO> orderVOList =  BeanUtil.copyProperties(ordersList,ordersList.getClass());
+        Page<OrderVO> page = (Page<OrderVO>)  orderVOList;
+
+
+        for (Orders orders : ordersList) {
+           OrderVO ordervo =BeanUtil.copyProperties(orders,OrderVO.class);
+           orderVOList.add(ordervo);
+//           ordervo.builder()
+//                   .id(orders.getId())
+//                   .number(orders.getNumber())
+//                   .status(orders.getStatus())
+//                   .userId(orders.getUserId())
+//                   .addressBookId(orders.getAddressBookId())
+//                   .orderTime(orders.getOrderTime())
+//                   .checkoutTime(orders.getCheckoutTime())
+//                   .payMethod(orders.getPayMethod())
+//                   .amount(orders.getAmount())
+//                   .remark(orders.getRemark())
+//                   .userName(orders.getUserName())
+//                   .phone(orders.getPhone())
+//                   .address(orders.getAddress())
+//                   .consignee(orders.getConsignee())
+//                   .cancelReason(orders.getCancelReason())
+//                   .rejectionReason(orders.getRejectionReason())
+//                   .cancelTime(orders.getCancelTime())
+//                   .estimatedDeliveryTime(orders.getEstimatedDeliveryTime())
+//                   .deliveryStatus(orders.getDeliveryStatus())
+//                   .
+
+        }
+        // 4.遍历voList
+        for (OrderVO orderVO : orderVOList) {
+            // 4-1 根据订单id查询明细列表
+            List<OrderDetail> detailList = orderDetailMapper.selectByOrderId(orderVO.getId());
+            // 4-2 设置到vo
+            orderVO.setOrderDetailList(detailList);
+        }
+
+//        for (Orders orders : ordersList) {
+//            List<OrderDetail> orderDetailList1 = orderDetailMapper.selectByOrderId(orders.getId());
+//            OrderVO orderVO = null;
+//            orderVO.setOrderDetailList(orderDetailList1);
+//            orderVO.setOrderDishes(orderDetailList.get(0).getName());//有问题
+////            for (OrderDetail orderDetail : orderDetailList1) {
+//               // OrderVO orderVO = null;
+//                //new OrderVO();
+//                BeanUtil.copyProperties(orderDetail, orderVO);
+//                orderVOList.add(orderVO);
+//            }
+//        PageResult pageResult = new PageResult();
+//        pageResult.setTotal(orderVOList.size());
+//        pageResult.setRecords(orderVOList);
+        return new PageResult(page.getTotal(),orderVOList);
+    }
 
     //用户提交order
     @Override
@@ -67,17 +162,30 @@ public class OrderServiceImpl implements OrderService {
             throw new BusinessException(400, "请选择正确收货地址下单");
         }
 
-        Orders orders = new Orders();
-        BeanUtil.copyProperties(ordersSubmitDTO, orders);
-        BeanUtil.copyProperties(addressBook, orders, "id", "creatTime");
+        //Orders orders = new Orders();
+//        BeanUtil.copyProperties(ordersSubmitDTO, orders);
+//        BeanUtil.copyProperties(addressBook, orders, "id", "creatTime");
+//
+//        orders.setNumber(RandomUtil.randomNumbers(8)); // 订单号
+//        orders.setAmount(ordersSubmitDTO.getAmount().add(BigDecimal.valueOf(ordersSubmitDTO.getPackAmount())));
+//        orders.setOrderTime(LocalDateTime.now());
+//        orders.setStatus(Orders.PENDING_PAYMENT);
+//        orders.setPayStatus(Orders.UN_PAID);
+//        orders.setAddress(addressBook.getCityName() + addressBook.getDistrictName() + addressBook.getDetail());// 地址信息
+        Orders orders = BeanUtil.copyProperties(ordersSubmitDTO, Orders.class);
         orders.setNumber(RandomUtil.randomNumbers(8)); // 订单号
-        orders.setAmount(ordersSubmitDTO.getAmount().add(BigDecimal.valueOf(ordersSubmitDTO.getPackAmount())));
-        orders.setOrderTime(LocalDateTime.now());
-        orders.setStatus(Orders.PENDING_PAYMENT);
-        orders.setPayStatus(Orders.UN_PAID);
+        orders.setStatus(Orders.PENDING_PAYMENT); // 订单状态 1待付款
+        orders.setUserId(ThreadLocalUtil.getCurrentId()); // 下单用户
+        orders.setOrderTime(LocalDateTime.now());// 下单时间
+        orders.setPayStatus(Orders.UN_PAID);// 支付状态 0未支付
+        orders.setPhone(addressBook.getPhone()); // 手机号
         orders.setAddress(addressBook.getCityName() + addressBook.getDistrictName() + addressBook.getDetail());// 地址信息
-        //orders.setId((long) random.nextInt(1000000000));
+        orders.setConsignee(addressBook.getConsignee()); // 收货人
+        // 3.保存订单
         orderMapper.insert(orders);
+        // 4.查询购物车列表，遍历
+        //orders.setId((long) random.nextInt(1000000000));
+
 
         OrderDetail orderDetail = new OrderDetail();
         BeanUtil.copyProperties(orders, orderDetail);
@@ -91,18 +199,30 @@ public class OrderServiceImpl implements OrderService {
         }
         for (ShoppingCart shoppingCart : shoppingCartList) {
             //if (shoppingCart.getDishId().equals(null)) ;
+//
+//            OrderDetail orderDetail1 = orderDetail;
+//            BeanUtil.copyProperties(shoppingCart, orderDetail1);
+//            orderDetailMapper.insert(orderDetail1);
+//            orderDetail2 = orderDetail1;
+//            shoppingCartMapper.deleteById(shoppingCart);
 
-            OrderDetail orderDetail1 = orderDetail;
-            BeanUtil.copyProperties(shoppingCart, orderDetail1);
-            orderDetailMapper.insert(orderDetail1);
-            orderDetail2 = orderDetail1;
-            shoppingCartMapper.deleteById(shoppingCart);
+            // 4-1 购物项转订单明细
+            orderDetail = BeanUtil.copyProperties(shoppingCart, OrderDetail.class, "id");
+            // 4-2 订单明细设置订单id
+            orderDetail.setOrderId(orders.getId());
+            // 4-3 保存订单明细
+            orderDetailMapper.insert(orderDetail);
         }
+        // 4-4 清空购物车
+        shoppingCartService.cleanCart();
+
+
         OrderSubmitVO orderSubmitVO = new OrderSubmitVO();
         orderSubmitVO.setId(orders.getId());
+        orderSubmitVO.setOrderAmount(orders.getAmount());
         orderSubmitVO.setOrderNumber(orders.getNumber());
         orderSubmitVO.setOrderTime(orders.getOrderTime());
-        BeanUtil.copyProperties(orderDetail2, orderSubmitVO);
+        // BeanUtil.copyProperties(orderDetail2, orderSubmitVO);
 
         orderSubmitVO.setOrderAmount(orders.getAmount());
 
