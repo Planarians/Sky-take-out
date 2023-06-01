@@ -45,7 +45,7 @@ public class SetmealController {
 
     //
     //修改套餐
-    @CacheEvict(value = "setmealCache",key="#setmealDTO.categoryId")
+    @CacheEvict(value = "setmealCache",allEntries = true)
     @PutMapping
     public Result updateSetmeal(@RequestBody SetmealDTO setmealDTO) {
         setmealService.updateBySetmealId(setmealDTO);
@@ -53,8 +53,9 @@ public class SetmealController {
         return Result.success();
     }
 
+
     // 修改套餐状态
-    @CacheEvict(value = "setmealCache",key="#setmeal.id")
+    @CacheEvict(value = "setmealCache",allEntries = true)
     @PostMapping("status/{status}")
     public Result updateSetmealStatus(@PathVariable("status") Integer status,
                                       @RequestParam Long id) {
@@ -63,7 +64,7 @@ public class SetmealController {
     }
 
     //批量删除套餐
-    @CacheEvict(value = "setmealCache",key="#setmeal.id")
+    @CacheEvict(value = "setmealCache",allEntries = true)
     @DeleteMapping
     public Result deleteSetmeal(@RequestParam ArrayList<Long> ids) {
         setmealService.deleteSetmeal(ids);

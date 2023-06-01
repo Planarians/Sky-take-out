@@ -39,7 +39,11 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
         Long userId = ThreadLocalUtil.getCurrentId();
         // 2.调用mapper查询
         return shoppingCartMapper.getByUserId(userId);
+
+
+
     }
+
 
 
     @Transactional
