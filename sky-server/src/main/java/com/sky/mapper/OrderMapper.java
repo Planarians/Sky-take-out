@@ -1,4 +1,5 @@
 package com.sky.mapper;
+
 import java.util.List;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -27,4 +28,7 @@ public interface OrderMapper extends BaseMapper<Orders> {
 
     @Select("select * from sky_take_out.orders")
     List<Orders> getAll(QueryWrapper<OrderVO> queryWrapper);
+
+    @Select("select * from sky_take_out.orders where id =#{id}")
+    Orders getById(Long id);
 }

@@ -77,6 +77,7 @@ public class CategoryServiceImpl implements CategoryService {
             queryWrapper.eq("status", categoryDTO.getStatus());
         }
 
+
         queryWrapper.orderByAsc("name", "type", "status");
 
         List<Category> list =categoryMapper.selectList(queryWrapper);

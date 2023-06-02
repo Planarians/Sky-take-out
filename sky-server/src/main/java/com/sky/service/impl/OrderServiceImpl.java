@@ -69,37 +69,37 @@ public class OrderServiceImpl implements OrderService {
         //Orders orders = orderMapper.selectById(ordersPageQueryDTO.get)
         ordersPageQueryDTO.setUserId(ThreadLocalUtil.getCurrentId());
         PageHelper.startPage(ordersPageQueryDTO.getPage(), ordersPageQueryDTO.getPageSize());
-      //  List<OrderVO> voList = orderMapper.getList(ordersPageQueryDTO);
+        //  List<OrderVO> voList = orderMapper.getList(ordersPageQueryDTO);
 
-        QueryWrapper<OrderVO> queryWrapper= new QueryWrapper<>();
+        QueryWrapper<OrderVO> queryWrapper = new QueryWrapper<>();
 
-        if(ordersPageQueryDTO.getNumber()!=null){
-            queryWrapper.eq("number",ordersPageQueryDTO.getNumber());
+        if (ordersPageQueryDTO.getNumber() != null) {
+            queryWrapper.eq("number", ordersPageQueryDTO.getNumber());
         }
-        if(ordersPageQueryDTO.getPhone()!=null) {
+        if (ordersPageQueryDTO.getPhone() != null) {
             queryWrapper.eq("phone", ordersPageQueryDTO.getPhone());
         }
-        if(ordersPageQueryDTO.getStatus()!=null) {
+        if (ordersPageQueryDTO.getStatus() != null) {
             queryWrapper.eq("status", ordersPageQueryDTO.getStatus());
         }
 
         queryWrapper.orderByDesc("order_time");
 
 
-       // queryWrapper.orderByAsc("number","phone","status");
+        // queryWrapper.orderByAsc("number","phone","status");
 
-      //  List<Orders> ordersList = orderMapper.getByUserId(ThreadLocalUtil.getCurrentId());
-       // List<OrderDetail> orderDetailList = null;
+        //  List<Orders> ordersList = orderMapper.getByUserId(ThreadLocalUtil.getCurrentId());
+        // List<OrderDetail> orderDetailList = null;
         List<Orders> ordersList = orderMapper.getAll(queryWrapper);
         queryWrapper.orderByDesc();
 
-        List<OrderVO> orderVOList =  BeanUtil.copyProperties(ordersList,ordersList.getClass());
-        Page<OrderVO> page = (Page<OrderVO>)  orderVOList;
+        List<OrderVO> orderVOList = BeanUtil.copyProperties(ordersList, ordersList.getClass());
+        Page<OrderVO> page = (Page<OrderVO>) orderVOList;
 
 
         for (Orders orders : ordersList) {
-           OrderVO ordervo =BeanUtil.copyProperties(orders,OrderVO.class);
-           orderVOList.add(ordervo);
+            OrderVO ordervo = BeanUtil.copyProperties(orders, OrderVO.class);
+            orderVOList.add(ordervo);
 //           ordervo.builder()
 //                   .id(orders.getId())
 //                   .number(orders.getNumber())
@@ -145,7 +145,7 @@ public class OrderServiceImpl implements OrderService {
 //        PageResult pageResult = new PageResult();
 //        pageResult.setTotal(orderVOList.size());
 //        pageResult.setRecords(orderVOList);
-        return new PageResult(page.getTotal(),orderVOList);
+        return new PageResult(page.getTotal(), orderVOList);
     }
 
     //用户提交order
@@ -258,6 +258,53 @@ public class OrderServiceImpl implements OrderService {
                 .build();
 
         return vo;
+    }
+
+    @Override
+    public OrderVO getOrderDetail(Long id) {
+        Orders orders = orderMapper.getById(id);
+        OrderVO orderVO = BeanUtil.copyProperties(orders, OrderVO.class);
+        List<OrderDetail> orderDetailList = orderDetailMapper.selectByOrderId(orders.getId());
+        orderVO.setOrderDetailList(orderDetailList);
+
+        return orderVO;
+    }
+
+    @Override
+    public void cancelOrder(Long id) {
+
+
+        Orders orders = orderMapper.getById(id);
+        if (orders.getStatus() > 2) {
+            throw new BusinessException(400, "无法取消不是待付款或待接单状态");
+        } else if (orders.getStatus() == 2) {
+            orders.setStatus(6);
+            orders.setPayStatus(2);
+        } else {
+            orders.setStatus(6);
+            orders.setCancelReason("用户取消订单");
+            orders.setCancelTime(LocalDateTime.now());
+        }
+
+
+        orderMapper.updateById(orders);
+    }
+
+    @Override
+    public void repetition(Long id) {
+        Orders orders = orderMapper.getById(id);
+        List<OrderDetail> orderDetailList = orderDetailMapper.selectByOrderId(id);
+        // 清空购物车
+        shoppingCartService.cleanCart();
+        for (OrderDetail orderDetail : orderDetailList) {
+            ShoppingCart shoppingCart=BeanUtil.copyProperties(orderDetail,ShoppingCart.class);
+            shoppingCart.setCreateTime(LocalDateTime.now());
+            shoppingCart.setId(null);
+            shoppingCart.setUserId(ThreadLocalUtil.getCurrentId());
+            shoppingCartMapper.insert(shoppingCart);
+        }
+
+
     }
 
 //    @Override

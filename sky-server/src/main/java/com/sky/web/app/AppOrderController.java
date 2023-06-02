@@ -1,7 +1,7 @@
 package com.sky.web.app;
 
 
-import com.sky.dto.OrdersCancelDTO;
+import com.baomidou.mybatisplus.extension.api.R;
 import com.sky.dto.OrdersPageQueryDTO;
 import com.sky.dto.OrdersPaymentDTO;
 import com.sky.dto.OrdersSubmitDTO;
@@ -11,6 +11,7 @@ import com.sky.result.Result;
 import com.sky.service.OrderService;
 import com.sky.vo.OrderPaymentVO;
 import com.sky.vo.OrderSubmitVO;
+import com.sky.vo.OrderVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -66,16 +67,28 @@ public class AppOrderController {
     }
 
 
-    GetMapping("/orderDetail/{id}")
+    @GetMapping("/orderDetail/{id}")
+    public Result getOrderDetail(@PathVariable("id") Long id) {
 
-    public Result getOrderDetail(@PathParam(Long id)) {
-
-
-
-        return null;
-
-
+        OrderVO orderVO = orderService.getOrderDetail(id);
+        return Result.success(orderVO);
     }
+
+
+    @PutMapping("/cancel/{id}")
+    public Result cancelOrder(@PathVariable("id") Long id){
+        orderService.cancelOrder(id);
+        return Result.success();
+    }
+
+    @PostMapping("/repetition/{id}")
+    public Result repetition(@PathVariable("id")Long id){
+        orderService.repetition(id);
+        return Result.success();
+    }
+
+
+
 
 
 }

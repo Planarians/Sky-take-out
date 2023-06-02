@@ -12,6 +12,7 @@ import com.sky.vo.OrderSubmitVO;
 import com.sky.entity.Orders;
 import com.sky.entity.OrderDetail;
 
+import com.sky.vo.OrderVO;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Service;
 
@@ -26,4 +27,9 @@ public interface OrderService {
     OrderPaymentVO payment(OrdersPaymentDTO ordersPaymentDTO) throws Exception;
 
 
+    OrderVO getOrderDetail(Long id);
+
+    void cancelOrder(Long id);
+
+    void repetition(Long id);
 }
