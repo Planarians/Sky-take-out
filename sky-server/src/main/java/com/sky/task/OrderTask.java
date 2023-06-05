@@ -32,7 +32,7 @@ public class OrderTask {
             weiZhiFu.setStatus(Orders.CANCELLED);
             weiZhiFu.setCancelTime(LocalDateTime.now());
             weiZhiFu.setCancelReason("用户超时未支付");
-            orderMapper.update(weiZhiFu);
+            orderMapper.updateById(weiZhiFu);
             log.info("清理超时订单号为："+weiZhiFu.getNumber());
         });
         log.info("结束清理超时订单....");
@@ -53,7 +53,7 @@ public class OrderTask {
         // 遍历更改状态为取消
         peiSongZhongList.forEach(peiSongZhong->{
             peiSongZhong.setStatus(Orders.COMPLETED);
-            orderMapper.update(peiSongZhong);
+            orderMapper.updateById(peiSongZhong);
             log.info("处理配送订单号为："+peiSongZhong.getNumber());
         });
         log.info("结束处理配送订单....");

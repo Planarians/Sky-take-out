@@ -1,5 +1,7 @@
 package com.sky.mapper;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -50,5 +52,9 @@ public interface OrderMapper extends BaseMapper<Orders> {
     // 修改订单状态
     @Select("select * from sky_take_out.orders where status = #{status} and order_time < #{orderTime}")
     List<Orders> getByStatusAndOrdertimeLT(Integer status, LocalDateTime orderTime);
+
+    @Select("select sum(amount) from sky_take_out.orders where status = 5 and date(order_time) =#{currentDate}")
+    BigDecimal getByStatusAndOrdertimeBetween(LocalDate currentDate);
+
 
 }

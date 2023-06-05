@@ -553,6 +553,24 @@ public class OrderServiceImpl implements OrderService {
     }
 
 
+    // 用户催单
+    @Override
+    public void reminder(Long id) {
+        // 查询订单是否存在
+        Orders orders = orderMapper.getById(id);
+        if (orders == null) {
+            throw new BusinessException("订单不存在");
+        }
+
+        //基于WebSocket实现催单
+        Map map = new HashMap();
+        map.put("type", 2);//2代表用户催单
+        map.put("orderId", id);
+        map.put("content", "订单号：" + orders.getNumber());
+        webSocketServer.sendToAllClient(JSON.toJSONString(map));
+    }
+
+
 //    @Override
 //    public int insert(Order entity) {
 //        return 0;

@@ -65,25 +65,6 @@ public class WebMvcConfig implements WebMvcConfigurer {
         converters.add(0, converter);
     }
 
-    // 通过knife4j生成接口文档
-    @Bean
-    public Docket docket() {
-        ApiInfo apiInfo = new ApiInfoBuilder()
-                .title("苍穹外卖-管理后台")
-                .version("2.0")
-                .description("管理后台接口文档")
-                .build();
-        Docket docket = new Docket(DocumentationType.SWAGGER_2)
-                .groupName("管理端接口")
-                .apiInfo(apiInfo)
-                .select()
-                .apis(RequestHandlerSelectors.basePackage("com.sky.web.admin"))
-                .paths(PathSelectors.any())
-                .build();
-        return docket;
-    }
-
-    // 通过knife4j生成接口文档
     @Bean
     public Docket docket2() {
         ApiInfo apiInfo = new ApiInfoBuilder()
@@ -107,5 +88,9 @@ public class WebMvcConfig implements WebMvcConfigurer {
         registry.addResourceHandler("/doc.html").addResourceLocations("classpath:/META-INF/resources/");
         registry.addResourceHandler("/webjars/**").addResourceLocations("classpath:/META-INF/resources/webjars/");
     }
+
+
+
+
 
 }

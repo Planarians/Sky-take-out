@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 @Component
 public class QuickTask {
 
-    @Scheduled(cron = "0/5 * * * * *?")
+    @Scheduled(cron = "0/5 * * * * *")
     public void showTime() {
         System.out.println(LocalDateTime.now());
     }

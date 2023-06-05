@@ -10,6 +10,10 @@ import com.sky.result.Result;
 import com.sky.service.EmployeeService;
 import com.sky.utils.JwtUtil;
 import com.sky.vo.EmployeeLoginVO;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.annotations.Update;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +28,7 @@ import java.util.Map;
 @Slf4j
 @RestController
 @RequestMapping("/admin/employee")
+@Api(tags = "员工相关接口")
 public class EmployeeController {
 
     @Autowired
@@ -33,21 +38,31 @@ public class EmployeeController {
     private JwtProperties jwtProperties;
 
 
-    // 员工登录
+    // 登录
+    @ApiOperation("员工登录")
     @PostMapping("/login")
+    @ApiImplicitParams(
+            @ApiImplicitParam(name = "employeeLoginDTO", value = "员工登录DTO", required = true, example = "username:admin,password=123456")
+    )
     public Result login(@RequestBody EmployeeLoginDTO employeeLoginDTO) {
-        // 调用service登录
+
         Employee employee = employeeService.login(employeeLoginDTO);
-        // jwt制作token
+
+        //登录成功后，生成jwt令牌
         Map<String, Object> claims = new HashMap<>();
         claims.put("empId", employee.getId());
-        String token = JwtUtil.createJWT(jwtProperties.getAdminSecret(), jwtProperties.getAdminTtl(), claims);
-        // 返回vo
+        String token = JwtUtil.createJWT(
+                jwtProperties.getAdminSecret(),
+                jwtProperties.getAdminTtl(),
+                claims);
+
+        //返回前端所需对象
         EmployeeLoginVO employeeLoginVO = EmployeeLoginVO.builder()
                 .id(employee.getId())
+                .userName(employee.getUsername())
                 .name(employee.getName())
                 .token(token)
-                .userName(employee.getUsername()).build();
+                .build();
         return Result.success(employeeLoginVO);
     }
 
