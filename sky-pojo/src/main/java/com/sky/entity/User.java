@@ -8,15 +8,24 @@ import lombok.NoArgsConstructor;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
 
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Entity
+@Table
 public class User implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
+    @Id
+    @Column(name="id")
     private Long id;
 
     //微信用户唯一标识

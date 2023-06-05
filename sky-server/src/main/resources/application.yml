@@ -21,6 +21,13 @@ spring:
     host: ${sky.redis.host}
     port: ${sky.redis.port}
     password: ${sky.redis.password}
+  jpa:
+    hibernate:
+      ddl-auto: update
+    # SQL语句打印
+    show-sql: true
+    # 配置方言
+    database-platform: org.hibernate.dialect.MySQL5Dialect
 
 mybatis:
   type-aliases-package: com.sky.entity
@@ -44,6 +51,10 @@ sky:
     user-ttl: 36000000
     # token请求头名称
     user-token-name: authentication
+  shop:
+    address: 北京市海淀区上地十街10号
+  baidu:
+    ak: 3zsdMCaxXQTqGwd1gpcnAOPvMIqDOOtP
 
 
 
