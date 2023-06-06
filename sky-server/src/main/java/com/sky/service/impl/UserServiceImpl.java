@@ -7,6 +7,7 @@ import com.sky.entity.User;
 import com.sky.exception.BusinessException;
 import com.sky.mapper.UserMapper;
 import com.sky.properties.WeChatProperties;
+import com.sky.repository.UserRepository;
 import com.sky.service.UserService;
 import com.sky.utils.HttpClientUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -26,6 +28,9 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private UserMapper userMapper;
+
+    @Autowired
+    private UserRepository userRepository;
 
     // 微信登录
     @Override
@@ -54,14 +59,17 @@ public class UserServiceImpl implements UserService {
             throw new BusinessException("微信登录失败");
         }
         // 3.根据openid查询user表
-        User user = userMapper.getByOpenid(openid);
+       // User user = userMapper.getByOpenid(openid);
+        User user = userRepository.findUserByOpenid(openid);
+
         // 4.判断是否为新用户
         if (user==null) {
             // 注册
             user = new User();
             user.setOpenid(openid);
             user.setCreateTime(LocalDateTime.now());
-            userMapper.insert(user);  // 开启主键返回
+            //userMapper.insert(user);  // 开启主键返回
+            userRepository.save(user);
         }
         // 5.返回user
         return user;

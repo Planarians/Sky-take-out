@@ -14,8 +14,8 @@ public interface AddressBookMapper extends BaseMapper<AddressBook> {
     @Select("select * from sky_take_out.address_book where user_id=#{userId}")
     List<AddressBook> getByUserId(Long userId);
 
-    @Override
-    AddressBook selectById(Serializable id);
+//    @Override
+//    AddressBook selectById(Serializable id);
 
 
 

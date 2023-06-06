@@ -14,6 +14,7 @@ import com.sky.exception.BusinessException;
 import com.sky.mapper.DishMapper;
 import com.sky.mapper.SetmealDishMapper;
 import com.sky.mapper.SetmealMapper;
+import com.sky.repository.DishRepository;
 import com.sky.result.PageResult;
 import com.sky.service.DishService;
 import com.sky.vo.DishVO;
@@ -24,10 +25,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Slf4j
-public class DishServiceImpl<DishFlavorMapper> implements DishService {
+public class DishServiceImpl implements DishService {
 
 
 
@@ -44,6 +46,9 @@ public class DishServiceImpl<DishFlavorMapper> implements DishService {
     @Autowired
     SetmealMapper setmealMapper;
 
+    @Autowired
+    DishRepository dishRepository;
+
 
     // 菜品新增
     @Transactional
@@ -51,7 +56,9 @@ public class DishServiceImpl<DishFlavorMapper> implements DishService {
     public void saveDishWithFlavor(DishDTO dishDTO) {
         // 1.参数校验
         // 2.业务校验
-        Dish oldDish = dishMapper.getByName(dishDTO.getName());
+        //Dish oldDish = dishMapper.getByName(dishDTO.getName());
+        Dish oldDish = dishRepository.findByName(dishDTO.getName());
+
         if (oldDish != null) {
             throw new BusinessException("菜品已存在");
         }
@@ -95,7 +102,7 @@ public class DishServiceImpl<DishFlavorMapper> implements DishService {
     @Override
     public DishVO getById(Long id) {
         // 1.先查菜品
-        Dish dish = dishMapper.getById(id);
+        Dish dish = dishRepository.getById(id);
         // 2.再根据菜品id查询口味列表
         List<DishFlavor> flavorList = dishFlavorMapper.getListByDishId(id);
         // 3.封装vo

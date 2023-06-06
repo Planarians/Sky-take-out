@@ -17,13 +17,13 @@ import java.util.List;
 import java.time.LocalDate;
 
 
-
 @Service
 public class ReportServiceImpl implements ReportService {
 
 
     @Autowired(required = false)
-    OrderMapper orderMapper;x
+    OrderMapper orderMapper;
+
 
 
     @Override
