@@ -60,21 +60,6 @@ public class ReportServiceImpl implements ReportService {
         return LocalDateList;
     }
 
-    class ValueComparator implements Comparator<String> {
-        Map<String, Integer> map;
-
-        public ValueComparator(Map<String, Integer> map) {
-            this.map = map;
-        }
-
-        @Override
-        public int compare(String s1, String s2) {
-            int value1 = map.get(s1);
-            int value2 = map.get(s2);
-            return value2 - value1;
-        }
-    }
-
 
     @Override
     public TurnoverReportVO getStatistics(LocalDate begin, LocalDate end) {
