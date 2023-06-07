@@ -5,10 +5,7 @@ import com.sky.mapper.UserMapper;
 import com.sky.repository.OrdersRepository;
 import com.sky.repository.UserRepository;
 import com.sky.service.WorkspaceService;
-import com.sky.vo.BusinessDataVO;
-import com.sky.vo.OrderReportVO;
-import com.sky.vo.TurnoverReportVO;
-import com.sky.vo.UserReportVO;
+import com.sky.vo.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -51,7 +48,7 @@ public class WorkspaceServiceImpl implements WorkspaceService {
 
 
         //LocalDate date = LocalDate.now();
-        LocalDate date = LocalDate.of(2023,5,31);
+        LocalDate date = LocalDate.of(2023, 5, 31);
         LocalDate beginTime = date;
         LocalDate endTime = date;
         TurnoverReportVO statistics = reportService.getStatistics(beginTime, endTime);
@@ -67,16 +64,10 @@ public class WorkspaceServiceImpl implements WorkspaceService {
 
         Long newUsers = userMapper.countUserIdByCreateTime_Date(date);
 
+
         String newUserList = userStatistics.getNewUserList();
         //Integer newUsers = Integer.parseInt(newUserList);
-        Double unitPrice = turnover/validOrderCount;
-
-
-
-
-
-
-
+        Double unitPrice = turnover / validOrderCount;
 
 
         return BusinessDataVO.builder()
@@ -89,6 +80,28 @@ public class WorkspaceServiceImpl implements WorkspaceService {
                 .date(date)
                 .beginTime(beginTime)
                 .endTime(endTime)
+                .build();
+    }
+
+    @Override
+    public OrderOverViewVO getOverViewOrders() {
+
+//        LocalDate localDate=LocalDate.now();
+        LocalDate localDate=LocalDate.of(2023,5,31);
+        Integer cancelledOrders = ordersRepository.countByStatusAndOrderTime(6, localDate);
+        Integer waitingOrders = ordersRepository.countByStatusAndOrderTime(2, localDate);
+        Integer completedOrders = ordersRepository.countByStatusAndOrderTime(5, localDate);
+        Integer deliveredOrders = ordersRepository.countByStatusAndOrderTime(3, localDate);
+        Integer allOrders = ordersRepository.countByStatusAndOrderTime(null, localDate);
+
+
+
+        return OrderOverViewVO.builder()
+                .waitingOrders(waitingOrders)
+                .deliveredOrders(deliveredOrders)
+                .completedOrders(completedOrders)
+                .cancelledOrders(cancelledOrders)
+                .allOrders(allOrders)
                 .build();
     }
 }
