@@ -44,8 +44,8 @@ public interface SetmealMapper extends BaseMapper<Setmeal> {
     @Select("select * from sky_take_out.setmeal where id=#{id}")
     Setmeal getById(Long id);
 
-
-
+    @Select("select count(*) from sky_take_out.setmeal where status = #{status}")
+    Integer countByStatus(Integer status);
 
 
 //

@@ -57,4 +57,6 @@ public interface OrderMapper extends BaseMapper<Orders> {
     BigDecimal getByStatusAndOrdertimeBetween(LocalDate currentDate);
 
 
+    @Select("select sum(amount) from sky_take_out.orders where status = 5 and date(order_time) between #{begin} and #{end}")
+    BigDecimal getSumTurnover1(LocalDate begin, LocalDate end);
 }

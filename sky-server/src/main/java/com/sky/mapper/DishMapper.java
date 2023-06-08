@@ -45,5 +45,7 @@ public interface DishMapper extends BaseMapper<Dish> {
     void deleteByDishId(Long id);
 
 
+    @Select("select count(*) from sky_take_out.dish where status = #{status}")
+    Integer countByStatus(Integer status);
 }
 

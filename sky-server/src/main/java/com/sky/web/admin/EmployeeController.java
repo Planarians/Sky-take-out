@@ -69,6 +69,7 @@ public class EmployeeController {
 
     // 员工退出
     @PostMapping("/logout")
+    @ApiOperation("退出登录")
     public Result logout() {
         return Result.success();
     }
