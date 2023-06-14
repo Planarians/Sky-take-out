@@ -71,15 +71,16 @@ public class WorkspaceServiceImpl implements WorkspaceService {
         Integer total = orderStatistics.getTotalOrderCount();
         Double orderCompletionRate = orderStatistics.getOrderCompletionRate();
         UserReportVO userStatistics = reportService.getUserStatistics(beginTime, endTime);
-        String totalUserList = userStatistics.getTotalUserList();
-
         Long newUsers = userMapper.countUserIdByCreateTime_Date(date);
 
 
         String newUserList = userStatistics.getNewUserList();
-        //Integer newUsers = Integer.parseInt(newUserList);
+       // Double turnover = Double.parseDouble(turnoverList);
+
+
         Double unitPrice = turnover / validOrderCount;
 
+        //Double turnover = Double.parseDouble(turnoverList);
 
         return BusinessDataVO.builder()
                 .turnover(turnover)
