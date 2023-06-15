@@ -21,8 +21,8 @@ sky:
     access-key-secret: 1EO5Jl99nKKxJlY2uzZOKo9GD29VZo
     bucket-name: sky-heima-mcy
   redis:
-#    host: localhost
-    host: 101.33.220.112
+    host: localhost
+#    host: 101.33.220.112
     port: 6379
     password: eqtgghewfo
 
