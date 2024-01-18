@@ -2,7 +2,8 @@ sky:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
 #    host: localhost
-    host: 101.33.220.112
+#    host: 101.33.220.112
+    host: 146.56.39.30
     port: 3306
     database: sky_take_out
 #    username: root
@@ -22,7 +23,8 @@ sky:
     bucket-name: sky-heima-mcy
   redis:
 #    host: localhost
-    host: 101.33.220.112
+#    host: 101.33.220.112
+    host: 146.56.39.30
     port: 6379
     password: eqtgghewfo
 
