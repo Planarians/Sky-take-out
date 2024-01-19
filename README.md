@@ -35,7 +35,7 @@ WeChat Mini Program Interface
 
 In terms of technology selection for this project, we will introduce the choices made in terms of the User Layer, Gateway Layer, Application Layer, and Data Layer, showcasing the frameworks and middleware used in the project.
 
-![image-20221106185646994](file:///Users/xiaoshitou/Documents/heiweb3.20/%E9%A1%B9%E7%9B%AE%E4%B8%80%E8%8B%8D%E7%A9%B9%E5%A4%96%E5%8D%96/day00-%E9%A1%B9%E7%9B%AE%E6%90%AD%E5%BB%BA/%E7%AC%94%E8%AE%B0/assets/image-20221106185646994.png?lastModify=1705694056)
+![](assets/image-20221106185646994.png)
 
 **1). User Layer**
 
